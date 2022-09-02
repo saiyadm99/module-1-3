@@ -5,20 +5,26 @@ const {dynamicCcounterActions} = require("./features/dynamicCounter/dynamicCount
 
 const {fetchPosts} = require("./features/post/postSlice")
 
+const {fetchRelatedPosts} = require("./features/relatedPosts/relatedPostsSlice")
+const title = "qui est esse";
 // subscribe to state changes
-store.subscribe(() => {
-    //console.log(store.getState());
+
+
+const ss = store.subscribe(() => {
+	const title = store.getState().post.posts.title;
+	if(title) {
+		console.log(title)
+	}
+
+	const relatedPost = store.getState().relatedPost
+	if(relatedPost){
+		console.log(relatedPost);
+	}
+	
 });
 
-// disptach actions
-// store.dispatch(counterActions.increment());
-
-// store.dispatch(counterActions.increment());
-
-// store.dispatch(counterActions.decrement());
+//console.log(ss)
 
 store.dispatch(fetchPosts());
+store.dispatch(fetchRelatedPosts(title));
 
-store.dispatch(dynamicCcounterActions.increment(4));
-
-store.dispatch(dynamicCcounterActions.decrement(2));

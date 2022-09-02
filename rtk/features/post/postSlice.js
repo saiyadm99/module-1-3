@@ -10,7 +10,7 @@ const initialState = {
 
 // create async thunk
 const fetchPosts = createAsyncThunk("post/fetchPosts", async() => {
-	const response = await fetch("https://jsonplaceholder.typicode.com/todos?_limit=5");
+	const response = await fetch("https://jsonplaceholder.typicode.com/posts/2");
 	const posts = await response.json();
 
 	return posts;
@@ -29,7 +29,7 @@ const postSlice = createSlice({
 		builder.addCase(fetchPosts.fulfilled, (state, action) => {
 			state.loading = false;
 			state.error = '';
-			state.posts = action.payload
+			state.posts = action.payload;
 		})
 
 		builder.addCase(fetchPosts.rejected, (state, action) => {
