@@ -1,8 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
+import tagsSlice from '../features/tags/tagsSlice';
+import videosReducer from '../features/videos/videosSlice';
+import videoReducer from '../features/video/videoSlice';
+import relatedVideosReducer from '../features/relatedVideos/relatedVideosSlice'
+import filterReducer from '../features/filter/filterSlice';
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
+    videos: videosReducer,
+		tags: tagsSlice,
+		video: videoReducer,
+		relatedVideos: relatedVideosReducer,
+		filter: filterReducer,
   },
 });
