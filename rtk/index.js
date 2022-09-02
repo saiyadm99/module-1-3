@@ -1,18 +1,16 @@
 const store = require("./app/store");
-const { counterActions } = require("./features/counter/counterSlice")
-
-const {dynamicCcounterActions} = require("./features/dynamicCounter/dynamicCounterSlice")
 
 const {fetchPosts} = require("./features/post/postSlice")
 
 const {fetchRelatedPosts} = require("./features/relatedPosts/relatedPostsSlice")
-const title = "qui est esse";
-// subscribe to state changes
 
+let value ;
 
-const ss = store.subscribe(() => {
+ store.subscribe(() => {
 	const title = store.getState().post.posts.title;
 	if(title) {
+		
+		value = title
 		console.log(title)
 	}
 
@@ -23,8 +21,10 @@ const ss = store.subscribe(() => {
 	
 });
 
-//console.log(ss)
-
 store.dispatch(fetchPosts());
-store.dispatch(fetchRelatedPosts(title));
 
+const delay = () => {
+	store.dispatch(fetchRelatedPosts(value))
+}
+
+const myTimeout = setTimeout(delay, 1000);
