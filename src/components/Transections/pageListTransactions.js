@@ -11,15 +11,17 @@ const PageListTransaction = () => {
 	const {searchField, transactionType} = useSelector(state => state.transaction)
 	
 	const [currentPage, setCurrentPage] = useState([1]);
-	const [postsPerPage, setPostPerPage] = useState([10]);
+	//const [totalPosts, setTotalPosts] = useState(transactions.length);
+	//const [postsPerPage, setPostPerPage] = useState([10]);
+	let totalPosts = transactions?.length;
 
 	useEffect(() => {
 		dispatch(fetchTransactions());
 	}, [dispatch]);
 
-	
+	const postsPerPage = 10;
 	const lastPostIndex = currentPage * postsPerPage;
-	const firstPostIndex = lastPostIndex - postsPerPage
+	const firstPostIndex = lastPostIndex - postsPerPage;
 	
 	const currentPost = transactions.slice(firstPostIndex, lastPostIndex)
 	console.log(currentPost)
@@ -35,10 +37,15 @@ const PageListTransaction = () => {
 	}
 
 	if(!isLoading && !isError && transactions?.length > 0) {
-		content = currentPost
-		.filter(transaction => transaction.name.toLowerCase().includes(searchField.toLocaleLowerCase()))
-		.filter(transaction => transactionType ? transaction.type === transactionType : true)
-		.map(transaction => <PageListTransection key={transaction.id} transaction={transaction}/>)
+		const filterBySearch = transactions.filter(transaction => transaction.name.toLowerCase().includes(searchField.toLocaleLowerCase()));
+
+		const filterByType = filterBySearch.filter(transaction => transactionType ? transaction.type === transactionType : true);
+
+	  totalPosts = filterByType.length;
+
+		const paginationFilter = filterByType.slice(firstPostIndex, lastPostIndex);
+
+		content = paginationFilter.map(transaction => <PageListTransection key={transaction.id} transaction={transaction}/>)
 	}
 
 	if(!isLoading && !isError && transactions?.length === 0) {
@@ -55,7 +62,7 @@ const PageListTransaction = () => {
 				</ul>
 			</div>
 			<Pagination 
-				totalPosts={transactions.length} 
+				totalPosts={totalPosts} 
 				postsPerPage={postsPerPage} 
 				setCurrentPage={setCurrentPage}
 				currentPage={currentPage}
