@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { changeTransaction, createTransaction } from "../features/transection/transactionSlice";
+import { changeTransaction, createTransaction, editInActive } from "../features/transection/transactionSlice";
 
 const Form = () => {
 
@@ -26,6 +26,12 @@ const Form = () => {
 			reset();
 		}
 	}, [editing])
+
+	useEffect(() => {
+		if(!editMode) {
+			dispatch(editInActive())
+		} 
+	}, [editMode, dispatch])
 
 	const reset = () => {
 		setName('');

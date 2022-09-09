@@ -8,6 +8,9 @@ const initialState = {
 	isError: false,
 	error: '',
 	editing: {},
+	pageListEditing: {},
+	searchField: '',
+	transactionType: '',
 }
 
 //async thunk
@@ -42,7 +45,23 @@ const transactionSlice = createSlice({
 		},
 		editInActive: (state) => {
 			state.editing = {};
-		}
+		},
+		pageListEditActive: (state, action) => {
+			state.pageListEditing = action.payload;
+		},
+		pageListEditInActive: (state) => {
+			state.pageListEditing = {};
+		},
+		changeSearch: (state, action) => {
+			state.searchField = action.payload;
+		},
+		changeType: (state, action) => {
+			state.transactionType = action.payload;
+		},
+		resetFilter: (state, action) => {
+			state.searchField = '';
+			state.transactionType = '';
+		} 
 	},
 	extraReducers: (builder) => {
 		builder
@@ -128,4 +147,4 @@ const transactionSlice = createSlice({
 })
 
 export default transactionSlice.reducer;
-export const {editActive, editInActive} = transactionSlice.actions;
+export const {editActive, editInActive, pageListEditActive, pageListEditInActive, changeSearch, changeType, resetFilter} = transactionSlice.actions;

@@ -8,6 +8,8 @@ const Transactions = () => {
 
 	const { transactions, isLoading, isError } = useSelector(state => state.transaction);
 
+	const latestTransaction = transactions.slice(Math.max(transactions.length - 5, 0));
+
 	useEffect(() => {
 		dispatch(fetchTransactions());
 	}, [dispatch]);
@@ -23,7 +25,7 @@ const Transactions = () => {
 	}
 
 	if(!isLoading && !isError && transactions?.length > 0) {
-		content = transactions.map(transaction => <Transection key={transaction.id} transaction={transaction}/>)
+		content = latestTransaction.map(transaction => <Transection key={transaction.id} transaction={transaction}/>)
 	}
 
 	if(!isLoading && isError && transactions?.length === 0) {
