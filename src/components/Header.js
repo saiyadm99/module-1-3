@@ -2,13 +2,16 @@ import { useState } from "react"
 import noteImage from "../assets/images/notes.png"
 import tickImage from "../assets/images/double-tick.png"
 import plusImage from "../assets/images/plus.png"
-import { allCompleted, clearCompleted } from "../redux/todos/actions"
-import { useDispatch } from "react-redux"
-import addTodo from "../redux/todos/thunk/addTodo"
+import { useAddTodoMutation, useDeleteTodosMutation, useEditTodoMutation, useGetTodosQuery } from "../features/api/apiSlice"
+
 
 
 const Header = () => {
-	const dispatch = useDispatch();
+	const [addTodo] = useAddTodoMutation()
+	const [editTodo] = useEditTodoMutation();
+	const {data: todos} = useGetTodosQuery();
+	const[deleteTodo] = useDeleteTodosMutation();
+
 	const [ input, setInput ] = useState('')
 
 	const handleInput = (e) => {
@@ -17,16 +20,31 @@ const Header = () => {
 
 	const submitHandler = (e) => {
 		e.preventDefault();
-		dispatch(addTodo(input));
+		addTodo({
+			text: input,
+			completed: false,
+		})
 		setInput('');
 	}
+	
 
 	const completeHandler = () => {
-		dispatch(allCompleted());
+		todos?.forEach((todo) => {
+			editTodo({
+				id: todo.id,
+				data: {
+					completed: true,
+				}
+			})
+		})
 	}
 
 	const clearHeandler = () => {
-		dispatch(clearCompleted());
+		const filteredCompleted = todos?.filter(todo => !todo.completed)
+		
+		filteredCompleted.forEach((todo) => {
+			deleteTodo(todo.id)
+		})
 	}
 
 	return(

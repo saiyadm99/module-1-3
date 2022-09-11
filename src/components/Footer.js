@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux/es/exports";
-import { statusChanged, colorChanged } from "../redux/filters/actions";
+import { useGetTodosQuery } from "../features/api/apiSlice";
+import { colorAdded, colorRemoved, statusChanged } from "../features/filterSlice";
 
 const numberOfTodos = (no_of_todos) => {
 	switch (no_of_todos) {
@@ -13,10 +14,12 @@ const numberOfTodos = (no_of_todos) => {
 }
 
 const Footer = () => {
-	const todos = useSelector((state) => state.todos);
-	const filters = useSelector((state) => state.filters)
 	const dispatch = useDispatch()
-	const todosRemining = todos.filter(todo => !todo.completed).length;
+
+	const {data: todos} = useGetTodosQuery();
+	const filters = useSelector((state) => state.filters)
+	
+	const todosRemining = todos?.filter(todo => !todo.completed).length;
 	const { status, colors} = filters;
 
 	const handleStatusChange = (status) => {
@@ -25,9 +28,9 @@ const Footer = () => {
 
 	const handleColorChange = (color) => {
 		if(colors.includes(color)){
-			dispatch(colorChanged(color, 'removed'))
+			dispatch(colorRemoved(color))
 		} else {
-			dispatch(colorChanged(color, 'added'))
+			dispatch(colorAdded(color))
 		}
 	}
 
@@ -55,15 +58,15 @@ const Footer = () => {
 
 					<li></li>
 					<li
-							className={`h-3 w-3 border-2 border-green-500 md:hover:bg-green-500 rounded-full cursor-pointer ${colors.includes('green') && 'bg-green-500'}`}
+							className={`h-3 w-3 border-2 border-green-500 md:hover:bg-green-500 rounded-full cursor-pointer ${colors?.includes('green') && 'bg-green-500'}`}
 							onClick={() => handleColorChange('green')}
 					></li>
 					<li
-							className={`h-3 w-3 border-2 border-red-500 md:hover:bg-red-500 rounded-full cursor-pointer ${colors.includes('red') && 'bg-red-500'}`}
+							className={`h-3 w-3 border-2 border-red-500 md:hover:bg-red-500 rounded-full cursor-pointer ${colors?.includes('red') && 'bg-red-500'}`}
 							onClick={() => handleColorChange('red')}
 					></li>
 					<li
-							className={`h-3 w-3 border-2 border-yellow-500 md:hover:bg-yellow-500 rounded-full cursor-pointer ${colors.includes('yellow') && 'bg-yellow-500'}`}
+							className={`h-3 w-3 border-2 border-yellow-500 md:hover:bg-yellow-500 rounded-full cursor-pointer ${colors?.includes('yellow') && 'bg-yellow-500'}`}
 							onClick={() => handleColorChange('yellow')}
 					></li>
 				</ul>

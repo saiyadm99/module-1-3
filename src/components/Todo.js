@@ -1,24 +1,63 @@
 import cancleImage from "../assets/images/cancel.png";
-import { useDispatch } from "react-redux/es/exports";
-import updateStatus from "../redux/todos/thunk/updateStatus";
-import updateColor from "../redux/todos/thunk/updateColor";
-import deleteTodo from "../redux/todos/thunk/deleteTodo";
+import deleteimage from "../assets/images/notes.png";
+import { useDeleteTodosMutation, useEditTodoMutation } from "../features/api/apiSlice";
+import { useState } from "react";
  
 const Todo = ({todo}) => {
-	const dispatch = useDispatch();
+
+	const [ input, setInput ] = useState(todo.text);
+	const [ ediMode, setEditMode  ] = useState(false);
+
+	const handleInput = (e) => {
+		setInput(e.target.value);
+	};
 
 	const {text, id, completed, color} = todo;
 
+	const[deleteTodo] = useDeleteTodosMutation();
+	const[editTodo] = useEditTodoMutation();
+
 	const handleStatusChange = (todoId) => {
-		dispatch(updateStatus(todoId, completed))
+		if(completed){
+			editTodo({
+				id: todoId,
+				data: {
+					completed: false,
+				}
+			})
+		}else{
+			editTodo({
+				id: todoId,
+				data: {
+					completed: true,
+				}
+			})
+		}
 	}
 
 	const handleColorChange = (todoId, color) => {
-		dispatch(updateColor(todoId, color))
+		editTodo({
+			id: todoId,
+			data: {
+				color: color,
+			}
+		})
 	}
 
 	const handleDelete = (todoId) => {
-		dispatch(deleteTodo(todoId))
+		deleteTodo(todoId);
+	}
+
+	const submitHandler = (e) => {
+		e.preventDefault();
+		editTodo({
+			id: id,
+			data: {
+				text: input,
+			}
+		})
+		setInput('');
+		setEditMode(false)
 	}
 
 	return(
@@ -39,9 +78,21 @@ const Todo = ({todo}) => {
 					</svg>}
 			</div>
 
-			<div className={`select-none flex-1 ${completed && 'line-through'}`}>
+			{!ediMode
+			? <div className={`select-none flex-1 ${completed && 'line-through'}`}>
 					{text}
-			</div>
+				</div> 
+			:<form className="select-none flex-1" onSubmit={submitHandler}>
+				<input
+					type="text"
+					placeholder="Edit your todo"
+					className="w-full text-lg px-4 py-1 border-none outline-none bg-gray-100 text-gray-500"
+					value={input}
+					onChange={handleInput}
+				/>
+			</form> }
+
+			
 
 			<div className={`flex-shrink-0 h-4 w-4 rounded-full border-2 ml-auto cursor-pointer border-green-500 hover:bg-green-500  ${color === "green" && "bg-green-500"}`} 
 			onClick={() => handleColorChange(id, 'green' )}
@@ -63,6 +114,13 @@ const Todo = ({todo}) => {
 					alt="Cancel"
 					onClick={() => handleDelete(id)}
 			/>
+			<img
+					src={deleteimage}
+					className="flex-shrink-0 w-4 h-4 ml-2 cursor-pointer"
+					alt="Cancel"
+					onClick={() => setEditMode(!ediMode)}
+			/>
+
 	</div>
 	)
 }
