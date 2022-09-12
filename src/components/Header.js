@@ -40,7 +40,7 @@ const Header = () => {
 	}
 
 	const clearHeandler = () => {
-		const filteredCompleted = todos?.filter(todo => !todo.completed)
+		const filteredCompleted = todos?.filter(todo => todo.completed)
 		
 		filteredCompleted.forEach((todo) => {
 			deleteTodo(todo.id)
