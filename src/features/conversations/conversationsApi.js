@@ -9,7 +9,6 @@ export const conversationsApi = apiSlice.injectEndpoints({
 
 			transformResponse(apiResponse, meta) {
 				const totalCount = meta.response.headers.get('X-Total-Count');
-				console.log(totalCount)
 				return {
 					data: apiResponse,
 					totalCount,
@@ -20,7 +19,7 @@ export const conversationsApi = apiSlice.injectEndpoints({
 				updateCachedData, cacheDataLoaded, cacheEntryRemoved
 			}) {
 				// create socket
-				const socket = io('http://localhost:9000', {
+				const socket = io('https://lws-app-chat.herokuapp.com/', {
 					reconnectionDelay: 1000,
 					reconnection: true,
 					reconnectionAttemps: 10,
@@ -32,7 +31,6 @@ export const conversationsApi = apiSlice.injectEndpoints({
 				try {
 					await cacheDataLoaded;
 					socket.on('conversation', (data) => {
-						console.log(data)
 						updateCachedData(draft => {
 							const conversation = draft.find(c => c.id == data?.data?.id)
 
@@ -70,7 +68,7 @@ export const conversationsApi = apiSlice.injectEndpoints({
 								}
 							})
 						);
-						// update messages cache pessimistically end here
+						// update conversation cache pessimistically end here
 					}
 				} catch(err) {}
 			}
@@ -85,8 +83,28 @@ export const conversationsApi = apiSlice.injectEndpoints({
 				body: data,
 			}),
 			async onQueryStarted(arg, {queryFulfilled, dispatch}) {
+
+				// optimistic cache update start
+				// dispatch(
+				// 	apiSlice.util.updateQueryData('getConversations', arg.sender, (draft) => {
+				// 		draft.data.push(arg.data)
+				// 	})
+				// );
+				// optimistic cache update end 
+
 				const conversation = await queryFulfilled;
+
 				if(conversation?.data?.id) {
+
+					// pessimistically update conversation cache start here
+					dispatch(
+						apiSlice.util.updateQueryData('getConversations', arg.sender, (draft) => {
+							draft.data.push(conversation.data)
+						})
+					)
+					// pessimistically update conversation cache end here
+
+
 					// silent entry to message table
 					const users = arg.data.users;
 
@@ -140,9 +158,14 @@ export const conversationsApi = apiSlice.injectEndpoints({
 							timestamp: arg.data.timestamp,
 						})).unwrap();
 						
+						
 						// update messages cache pessimistically start here
+						const id = arg.id.toString()
+						const myEmail = senderUser.email
+						
 						dispatch(
-							apiSlice.util.updateQueryData('getMessages', res.conversationId.toString(), (draft) => {
+							apiSlice.util.updateQueryData('getMessages', {id, myEmail}, (draft) => {
+								console.log('message update working')
 								draft.push(res)
 							})
 						);

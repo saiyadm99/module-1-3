@@ -21,7 +21,7 @@ export default function Login() {
 		if(data?.accessToken && data?.user) {
 			navigate('/inbox');
 		}
-	})
+	},[responseError])
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
