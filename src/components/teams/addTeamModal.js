@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useAddTeamMutation } from "../../features/teams/teamsApi";
 import Error from "../ui/Error";
 

@@ -5,12 +5,6 @@ import Error from "../ui/Error";
 
 const DeleteProjectModal = ({ open, control, id }) => {
 
-	const [team, setTeam] = useState("");
-	const [title, setTitle ] = useState("");
-	const [color, setColor] = useState("");
-
-	const [responseError, setResponseError] = useState('');
-	
 	const [ addProject ] = useAddProjectsMutation();
 
 	const [deleteProject] = useDeleteProjectMutation();
