@@ -4,7 +4,7 @@ import fetchTodos from "../redux/todos/thunk/fetchTodos";
 import Todo from "./Todo";
 
 
-const TodoList = () => {
+const BottomTodoList = () => {
 	const todos = useSelector((state) => state.todos);
 	const filters = useSelector((state) => state.filters);
 	const dispatch = useDispatch();
@@ -36,7 +36,7 @@ const TodoList = () => {
 				return true;
 				
  			})
-			.filter(todo => !todo.completed)
+			.filter(todo => todo.completed)
 			.map(todo => (
 				<Todo todo={todo} key={todo.id} /> 
 			))}	
@@ -44,4 +44,4 @@ const TodoList = () => {
 	)
 }
 
-export default TodoList;
+export default BottomTodoList;

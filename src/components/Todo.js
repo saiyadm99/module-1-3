@@ -1,13 +1,22 @@
+import { useState } from "react";
+import deleteimage from "../assets/images/notes.png"
 import cancleImage from "../assets/images/cancel.png";
 import { useDispatch } from "react-redux/es/exports";
 import updateStatus from "../redux/todos/thunk/updateStatus";
 import updateColor from "../redux/todos/thunk/updateColor";
 import deleteTodo from "../redux/todos/thunk/deleteTodo";
+import editTodo from "../redux/todos/thunk/editTodo";
  
 const Todo = ({todo}) => {
 	const dispatch = useDispatch();
-
 	const {text, id, completed, color} = todo;
+
+	const [ input, setInput ] = useState(text);
+	const [ editMode, setEditMode  ] = useState(false);
+
+	const handleInput = (e) => {
+		setInput(e.target.value)
+	};
 
 	const handleStatusChange = (todoId) => {
 		dispatch(updateStatus(todoId, completed))
@@ -19,6 +28,13 @@ const Todo = ({todo}) => {
 
 	const handleDelete = (todoId) => {
 		dispatch(deleteTodo(todoId))
+	}
+
+	const submitHandler = (e) => {
+		e.preventDefault();
+
+		dispatch(editTodo(id, input))
+		setEditMode(false)
 	}
 
 	return(
@@ -39,9 +55,20 @@ const Todo = ({todo}) => {
 					</svg>}
 			</div>
 
-			<div className={`select-none flex-1 ${completed && 'line-through'}`}>
+			{!editMode 
+			? <div className={`select-none flex-1 ${completed && 'line-through'}`}>
 					{text}
 			</div>
+			: <form className="select-none flex-1" onSubmit={submitHandler}>
+				<input
+					type="text"
+					placeholder="Edit your todo"
+					className="w-full text-lg px-4 py-1 border-none outline-none bg-gray-100 text-gray-500"
+					value={input}
+					onChange={handleInput}
+				/>
+			</form>
+			}
 
 			<div className={`flex-shrink-0 h-4 w-4 rounded-full border-2 ml-auto cursor-pointer border-green-500 hover:bg-green-500  ${color === "green" && "bg-green-500"}`} 
 			onClick={() => handleColorChange(id, 'green' )}
@@ -58,10 +85,17 @@ const Todo = ({todo}) => {
 			</div>
 
 			<img
-					src={cancleImage}
-					className="flex-shrink-0 w-4 h-4 ml-2 cursor-pointer"
-					alt="Cancel"
-					onClick={() => handleDelete(id)}
+				src={cancleImage}
+				className="flex-shrink-0 w-4 h-4 ml-2 cursor-pointer"
+				alt="Cancel"
+				onClick={() => handleDelete(id)}
+			/>
+
+			<img
+				src={deleteimage}
+				className="flex-shrink-0 w-4 h-4 ml-2 cursor-pointer"
+				alt="Cancel"
+				onClick={() => setEditMode(!editMode)}
 			/>
 	</div>
 	)

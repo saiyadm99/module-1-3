@@ -2,6 +2,7 @@ import TodoList from "./components/TodoList";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Navbar from "./components/Navbar";
+import BottomTodoList from "./components/bottomTodoList";
 
 
 function App() {
@@ -19,9 +20,14 @@ function App() {
 
 						<TodoList />
 
-						<hr className="mt-4" />
+						
+						<hr className="mt-4 mb-4" />
 
 						<Footer />
+
+						<hr className="mt-5 mb-5" />
+						<h2 className="m-2">Completed Tasks</h2>
+						<BottomTodoList />
 				</div>
 		</div>
   );

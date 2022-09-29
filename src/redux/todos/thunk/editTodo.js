@@ -1,11 +1,11 @@
-import { colorSelected } from "../actions";
+import { edit } from "../actions";
 
-const updateColor = (todoId, color) => {
+const editTodo = (todoId, text) => {
 	return async (dispatch, getState) => {
 		const response = await fetch(`https://lwsjson.herokuapp.com/todos/${todoId}`, {
 			method: 'PATCH',
 			body: JSON.stringify({
-				color: color,
+				text: text,
 			}),
 			headers: {
 				"Content-type": "application/json; charset=UTF-8"
@@ -14,8 +14,8 @@ const updateColor = (todoId, color) => {
 		const todo = await response.json();
 		console.log(`hi ${todo.text}`)
 	
-		dispatch(colorSelected(todo.id, todo.color));
+		dispatch(edit(todo.id, todo.text));
 	}
 }
 
-export default updateColor;  
+export default editTodo;  
