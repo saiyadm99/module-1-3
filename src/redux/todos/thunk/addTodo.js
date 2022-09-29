@@ -13,7 +13,6 @@ const addTodo = (todoText) => {
 			}
 		});
 		const todo = await response.json();
-		console.log(`hi ${todo.text}`)
 	
 		dispatch(added(todo.text));
 	}

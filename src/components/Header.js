@@ -2,14 +2,18 @@ import { useState } from "react"
 import noteImage from "../assets/images/notes.png"
 import tickImage from "../assets/images/double-tick.png"
 import plusImage from "../assets/images/plus.png"
-import { allCompleted, clearCompleted } from "../redux/todos/actions"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import addTodo from "../redux/todos/thunk/addTodo"
-
+import updateStatus from "../redux/todos/thunk/updateStatus"
+import deleteTodo from "../redux/todos/thunk/deleteTodo"
 
 const Header = () => {
 	const dispatch = useDispatch();
+	const todos = useSelector((state) => state.todos)
 	const [ input, setInput ] = useState('')
+	
+	const incompletedTodos = todos.filter((todo) => !todo.completed)
+	const completedTodos = todos.filter((todo) => todo.completed)
 
 	const handleInput = (e) => {
 		setInput(e.target.value);
@@ -22,11 +26,15 @@ const Header = () => {
 	}
 
 	const completeHandler = () => {
-		dispatch(allCompleted());
+		incompletedTodos.forEach(todo => {
+			dispatch(updateStatus(todo.id, todo.completed))
+		});
 	}
 
 	const clearHeandler = () => {
-		dispatch(clearCompleted());
+		completedTodos.forEach(todo => {
+			dispatch(deleteTodo(todo.id))			
+		});
 	}
 
 	return(
