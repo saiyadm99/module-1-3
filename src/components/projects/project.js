@@ -1,19 +1,26 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { storDragStart } from "../../features/projects/projectsSlice";
 import DeleteProjectModal from "./deleteProjectModal";
 
 const Project = ({project , stage}) => {
-
 	const {id, team, timestamp, title, creator } = project || {};
+	
+	const dispatch = useDispatch();
 
 	const [opened, setOpened] = useState(false);
-
 	const controlModal = () => {
 			setOpened((prevState) => !prevState);
 	};
 
+	const handleStart = (e) => {
+		dispatch(storDragStart(id))
+	}
+
 	return (
 		<>
 		<div
+			onDragStart={handleStart}
 			className="relative flex flex-col items-start p-4 mt-3 bg-white rounded-lg cursor-pointer bg-opacity-90 group hover:bg-opacity-100"
 			draggable="true"
 		>

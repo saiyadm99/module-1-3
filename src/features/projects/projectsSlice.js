@@ -1,12 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {};
+const initialState = {
+	dragId: undefined
+};
 
 const projectsSlice = createSlice({
     name: "projects",
     initialState,
-    reducers: {},
+    reducers: {
+			storDragStart: (state, action) => {
+				state.dragId = action.payload
+			}
+		},
 });
 
-//export const {} = projectsSlice.actions;
+export const {storDragStart} = projectsSlice.actions;
 export default projectsSlice.reducer;

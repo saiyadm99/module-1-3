@@ -48,6 +48,7 @@ const ProjectHeader = () => {
       <button className="flex items-center justify-center w-8 h-8 ml-auto overflow-hidden rounded-full cursor-pointer">
         <img
          src={`https://robohash.org/${myEmail}?size=200x200`}
+				 alt={myEmail}
         />
       </button>
     </div>

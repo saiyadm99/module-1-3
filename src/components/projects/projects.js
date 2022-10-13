@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useEditProjectsMutation } from "../../features/projects/projectsApi";
 import AddProjectModal from "./addProjectModal";
 import Project from "./project";
 
@@ -7,14 +9,35 @@ const Projects = ({projects, stage}) => {
 	const filteredProjects = projects?.filter((project) => project.stage === stage)
 
 	const [opened, setOpened] = useState(false);
+	
+	const {dragId} = useSelector(state => state.projects);
+	const [editProject] = useEditProjectsMutation();
 
 	const controlModal = () => {
 			setOpened((prevState) => !prevState);
 	};
+
+	const handeleDragOver = (e) => {
+		e.preventDefault();
+	}
+
+	const handleDrop = (e) => {
+		e.preventDefault();
+		editProject({
+			id: dragId,
+			data: {
+				stage : stage
+			}
+		})
+	}
 	
 	return (
 		<>
-		<div className="flex flex-col flex-shrink-0 w-72">
+		<div 
+			className="flex flex-col flex-shrink-0 w-72"
+			onDragOver={handeleDragOver}
+			onDrop={handleDrop}
+		>
 			<div className="flex items-center flex-shrink-0 h-10 px-2">
 				<span className="block text-sm font-semibold">{stage}</span>
 				<span className="flex items-center justify-center w-5 h-5 ml-2 text-sm font-semibold text-indigo-500 bg-white rounded bg-opacity-30">
